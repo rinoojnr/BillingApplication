@@ -30,6 +30,13 @@ const stocksSchema = new Schema({
     item_expiry: {
         type: Date,
         required: true
+    },
+    user_saving: {
+        type: Number
+    },
+    updatedAt: {
+        type: Date,
+        default: null
     }
 
 });
