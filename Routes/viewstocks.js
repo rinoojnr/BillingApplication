@@ -5,5 +5,6 @@ const viewstocksController = require('../Controllers/viewstocks');
 const router = express.Router();
 
 router.get('/viewallstocks',viewstocksController.viewStock);
-
+router.get('/viewonestockitem/:id',viewstocksController.viewOne)
+;
 module.exports = router;

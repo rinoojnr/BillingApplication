@@ -3,10 +3,9 @@ const Stocks = require('../Models/stocks');
 //ADD STOCK ITEM
 exports.addStcoksitem = (req,res) =>{
     const { item_name,item_quantity,item_mrp,item_srp,item_category,item_expiry } = req.body;
-    const expiryDate = new Date();
     const createdDate = new Date();
     const userSaving = item_mrp - item_srp;
-    Stocks.create({ item_name,item_quantity,item_mrp,item_srp,item_category,item_expiry: expiryDate,user_saving: userSaving,item_added: createdDate })
+    Stocks.create({ item_name,item_quantity,item_mrp,item_srp,item_category,item_expiry,user_saving: userSaving,item_added: createdDate })
     .then(()=>{
         res.status(200).json({success: true});
     })
@@ -37,16 +36,16 @@ exports.editStockitem = (req,res) =>{
         result.item_mrp = item_mrp;
         result.item_srp = item_srp;
         result.item_category = item_category;
-        result.item_expiry = new Date();
+        result.item_expiry = item_expiry;
         result.user_saving = item_mrp - item_srp;
         result.save();
+        res.status(200).json({success: true,message: "edited successfully"})
     })
 }
 
 
 //SEARCH 
 exports.searchItems = async (req,res) =>{
-    console.log(req.params.search)
     Stocks.find(
         {
             "$or": [
