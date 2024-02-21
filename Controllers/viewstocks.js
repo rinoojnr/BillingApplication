@@ -9,6 +9,15 @@ exports.viewStock = (req,res) =>{
     })
 }
 
+exports.viewStockForSelect = (req,res) =>{
+    Stocks.find().sort({item_name: 1}).then((response)=>{
+        res.status(200).json({success: true,message: "fetched all stocks",stocks: response});
+    })
+    .catch((err)=>{
+        res.status(400).json({success: false, message: "fetching stocks failed"});
+    })
+}
+
 // exports.filter = (req,res) =>{
 
 // }

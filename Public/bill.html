@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Billing Application</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .item-list {
+            width: calc(100% - 80px);
+            margin-bottom: 10px;
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+
+        .quantity-input {
+            width: 50px;
+            margin-right: 10px;
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+
+        #add-quantity, #subtract-quantity, #add-to-bill, #print-bill, #finish-bill, #cancel-bill {
+            padding: 8px 16px;
+            margin-top: 10px;
+            border: none;
+            background-color: #4CAF50;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        #add-quantity, #subtract-quantity {
+            background-color: #008CBA;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px dotted #888;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .action-buttons button {
+            padding: 4px 8px;
+            margin-right: 5px;
+            border: none;
+            background-color: #f2f2f2;
+            color: #666;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .action-buttons button:hover {
+            background-color: #ddd;
+        }
+        .addbill-container{
+            display: flex;
+            height: 100%;
+        }
+        .addbill-sub-container{
+            display: flex;
+            flex-direction: column;
+        }
+        .viewbill-container{
+            height: 100%;
+            overflow: scroll;
+        }
+        @media print {
+            body {
+                visibility: hidden;
+            }
+            #shope-name{
+                visibility: visible;
+            }
+            .action,.action-buttons{
+                visibility: hidden;
+            }
+            #ready-to-bill {
+                visibility: visible;
+                position: absolute;
+                left: 0;
+                top: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="addbill-container">
+        <div class="addbill-sub-container">
+            <div>
+                <h1>Billing Application</h1>
+                    <label for="item-list">Select Item:</label>
+                    <select id="item-list" class="item-list">
+                    </select>
+                    <input type="text" id="quantity" class="quantity-input" value="1">
+                    <button id="add-quantity">+</button>
+                    <button id="subtract-quantity">-</button>
+                    <button id="add-to-bill">Add to Bill</button>
+            </div>
+            <div>
+                <button id="print-bill">Print Bill</button>
+                <button id="finish-bill">Finished</button>
+                <button id="print-bill">Draft</button>
+                <button id="cancel-bill">Cancel</button>
+            </div>
+        </div>
+        <div class="viewbill-container">       
+            <table id="ready-to-bill">
+                <caption id="shope-name" style="font-size: xx-large;">Shope Name</caption> 
+                <caption><br></caption><caption><br></caption>
+                <thead>
+                    <tr>
+                        <th>NO</th>
+                        <th>ITEM</th>
+                        <th>QTY</th>
+                        <th>MRP</th>
+                        <th>SRP</th>
+                        <th>AMOUNT</th>
+                        <th class="action">ACTION</th>
+                    </tr>
+                </thead>
+                <tbody id="bill-items">
+                </tbody>
+                <tr><td><br></td></tr>
+                <tr>
+                    <td>Total QTY: </td>
+                    <td><br></td><td><br></td><td><br></td><td><br></td>
+                    <td id="qty">0</td>
+                </tr>
+                <tr>
+                    <td>MRP Value: </td>
+                    <td><br></td><td><br></td><td><br></td><td><br></td>
+                    <td id="mrp">0</td>
+                </tr>
+                <tr>
+                    <th style="font-size: 22px;">Amount: </th>
+                    <td><br></td><td><br></td><td><br></td><td><br></td>
+                    <th id="amount" style="font-size: 22px;">0</th>
+                    
+                </tr>
+                <tr id="saved-price">
+                    <td>You Saved: </td>
+                    <td><br></td><td><br></td><td><br></td><td><br></td>
+                    <td style="font-weight: bolder;" id="saved">0</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="billscript.js"></script>
+
+    <!-- <script>
+        document.getElementById('add-quantity').addEventListener('click', function() {
+            document.getElementById('quantity').value++;
+        });
+
+        document.getElementById('subtract-quantity').addEventListener('click', function() {
+            let quantity = parseInt(document.getElementById('quantity').value);
+            if (quantity > 1) {
+                document.getElementById('quantity').value--;
+            }
+        });
+
+        document.getElementById('add-to-bill').addEventListener('click', function() {
+            let selectedItem = document.getElementById('item-list').value;
+            let quantity = document.getElementById('quantity').value;
+            let row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${selectedItem}</td>
+                <td>${quantity}</td>
+                <td class="action-buttons">
+                    <button class="edit-btn">Edit</button>
+                    <button class="delete-btn">Delete</button>
+                </td>
+            `;
+            document.getElementById('bill-items').appendChild(row);
+            attachDeleteEvent();
+            attachEditEvent();
+        });
+
+        function attachDeleteEvent() {
+            let deleteButtons = document.querySelectorAll('.delete-btn');
+            deleteButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    button.closest('tr').remove();
+                });
+            });
+        }
+
+        function attachEditEvent() {
+            let editButtons = document.querySelectorAll('.edit-btn');
+            editButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    let row = button.closest('tr');
+                    let itemName = row.querySelector('td:first-child').textContent;
+                    let quantity = row.querySelector('td:nth-child(2)').textContent;
+                    document.getElementById('item-list').value = itemName;
+                    document.getElementById('quantity').value = quantity;
+                    row.remove();
+                });
+            });
+        }
+
+        document.getElementById('print-bill').addEventListener('click', function() {
+            window.print();
+        });
+    </script> -->
+</body>
+</html>
