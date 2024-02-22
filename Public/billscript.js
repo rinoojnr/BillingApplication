@@ -4,7 +4,8 @@ const addToBill = document.getElementById('add-to-bill');
 const billItems = document.getElementById('bill-items');
 const itemsList = document.getElementById('item-list');
 const finishedBill = document.getElementById('finish-bill');
-const cancelBill = document.getElementById('cancel-bill')
+const cancelBill = document.getElementById('cancel-bill');
+const draftBill = document.getElementById('draft-bill');
 
 getStocks();
 
@@ -20,6 +21,25 @@ function getStocks(){
         }
     })
 }
+
+draftBill.addEventListener('click',()=>{
+    if(arr.length == 0){
+        alert('Please Add Items');
+    }else{
+        const idAndQtyArray = [];
+        arr.forEach((i)=>{
+            idAndQtyArray.push({ _id: i.id,item_quantity: i.quantity })
+        })
+        axios.post('http://localhost:3000/darftbill',idAndQtyArray)
+        .then((result)=>{
+            alert("Bill Drafted");
+        })
+        .catch((err)=>{
+            alert("Error: Drafting failed");
+        })
+        
+    }
+})
 
 finishedBill.addEventListener('click',()=>{
     if(arr.length == 0){

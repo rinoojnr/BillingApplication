@@ -9,8 +9,8 @@ const billSchema = new Schema({
         item_quantity: Number
     }],
     status: {
-        type: String,
-        default: 'Draft',
+        type: Boolean,
+        default: 'false',
         required: true
     },
     time: {
