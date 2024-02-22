@@ -31,7 +31,7 @@ finishedBill.addEventListener('click',()=>{
         })
         axios.post('http://localhost:3000/modifiedstocks',idAndQtyArray)
         .then((result)=>{
-            console.log(result)
+            alert("Bill saved");
         })
         .catch((err)=>{
             alert("Error: Please Save As Draft");
