@@ -1,5 +1,6 @@
 const Stocks = require('../Models/stocks');
 const Bill = require('../Models/bill');
+const bill = require('../Models/bill');
 
 exports.modifiedStock = async(req,res) =>{
     try{
@@ -31,17 +32,38 @@ exports.modifiedStock = async(req,res) =>{
     }
 }
 
-exports.darftBill = (req,res)=>{
-    const items = req.body;
+exports.darftBill = (req,res) =>{
+    const items = req.body.idAndQtyArray;
     const itemAndQuantity = [];
     items.forEach((i)=>{
         itemAndQuantity.push({ item_id: i._id,item_quantity: i.item_quantity })
     });
-    Bill.create({ item_idandqty: itemAndQuantity,status: false,time: new Date() })
+    Bill.create({ item_idandqty: itemAndQuantity,status: false,time: new Date(),name: req.body.name, phone: req.body.phone })
     .then((result)=>{
         res.status(200).json({ success: true, message: "bill drafted successfully" });
     })
     .catch((err)=>{
         res.status(400).json({ success: false, message: "bill drafting failed" });
+    });
+}
+
+
+exports.viewDraft = (req,res) =>{
+    Bill.find({status: false}).select('_id name phone time')
+    .then((result) =>{
+        res.status(200).json({ success: true, message: "fetched all detatiles", billholders: result})
     })
+    .catch((err) =>{
+        res.status(400).json({ success: false, message: "fetching failed" })
+    });
+}
+
+exports.viewDraftBill = (req,res) =>{
+    Bill.findById(req.params._id).select('-__v').populate('item_idandqty.item_id')
+    .then((result) =>{
+        res.status(200).json({ status: 200, message: "fetched all detatiles", billingdetailes: result });
+    })
+    .catch((err) =>{
+        res.status(400).json({ success: false, message: "fetching failed" })
+    });
 }

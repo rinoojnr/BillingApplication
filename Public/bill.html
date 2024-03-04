@@ -116,6 +116,14 @@
                 top: 0;
             }
         }
+        .name,.phone {
+            width: 120px;
+            margin-right: 10px;
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+        
     </style>
 </head>
 <body>
@@ -123,13 +131,19 @@
         <div class="addbill-sub-container">
             <div>
                 <h1>Billing Application</h1>
-                    <label for="item-list">Select Item:</label>
                     <select id="item-list" class="item-list">
+                        <option value="" disabled selected>Select Item</option>
                     </select>
                     <input type="text" id="quantity" class="quantity-input" value="1">
                     <button id="add-quantity">+</button>
                     <button id="subtract-quantity">-</button>
                     <button id="add-to-bill">Add to Bill</button>
+                    <div>
+                        <br>
+                        <input type="text" id="name" name="name" class="name" placeholder="Name">
+                        <input type="number" id="phone" name="phone" class="phone" placeholder="Phone">
+                    </div>
+                    
             </div>
             <div>
                 <button id="print-bill">Print Bill</button>

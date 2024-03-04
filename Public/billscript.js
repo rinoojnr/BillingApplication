@@ -6,6 +6,8 @@ const itemsList = document.getElementById('item-list');
 const finishedBill = document.getElementById('finish-bill');
 const cancelBill = document.getElementById('cancel-bill');
 const draftBill = document.getElementById('draft-bill');
+const name = document.getElementById('name');
+const phone = document.getElementById('phone');
 
 getStocks();
 
@@ -19,24 +21,28 @@ function getStocks(){
             selectOption.append(text);
             itemsList.append(selectOption);
         }
-    })
+    });
 }
 
 draftBill.addEventListener('click',()=>{
     if(arr.length == 0){
         alert('Please Add Items');
     }else{
-        const idAndQtyArray = [];
-        arr.forEach((i)=>{
-            idAndQtyArray.push({ _id: i.id,item_quantity: i.quantity })
-        })
-        axios.post('http://localhost:3000/darftbill',idAndQtyArray)
-        .then((result)=>{
-            alert("Bill Drafted");
-        })
-        .catch((err)=>{
-            alert("Error: Drafting failed");
-        })
+        if(name.value == '' || phone.value == ''){
+            alert("Please Enter the name&phone number")
+        }else{
+            const idAndQtyArray = [];
+            arr.forEach((i)=>{
+                idAndQtyArray.push({ _id: i.id,item_quantity: i.quantity })
+            })
+            axios.post('http://localhost:3000/darftbill',{idAndQtyArray:idAndQtyArray,name: name.value,phone: phone.value})
+            .then((result)=>{
+                alert("Bill Drafted");
+            })
+            .catch((err)=>{
+                alert("Error: Drafting failed");
+            })
+        }
         
     }
 })
@@ -119,6 +125,7 @@ addToBill.addEventListener('click',()=>{
     //             </td><tr>`;
     //             document.getElementById('bill-items').innerHTML = addBillinnerHTML;
     document.getElementById('quantity').value = 1;
+    item.value = '';
 });
 
 

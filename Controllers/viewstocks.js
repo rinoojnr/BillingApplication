@@ -1,7 +1,7 @@
 const Stocks = require('../Models/stocks');
 
 exports.viewStock = (req,res) =>{
-    Stocks.find().sort({item_added: -1}).then((response)=>{
+    Stocks.find().sort({item_added: -1}).populate({path: 'item_category',select: 'item_category'}).then((response)=>{
         res.status(200).json({success: true,message: "fetched all stocks",stocks: response});
     })
     .catch((err)=>{
@@ -23,7 +23,7 @@ exports.viewStockForSelect = (req,res) =>{
 // }
 
 exports.viewOne = (req,res) =>{
-    Stocks.findOne({_id: req.params.id})
+    Stocks.findOne({_id: req.params.id}).populate('item_category')
     .then((response)=>{
         res.status(200).json({success: true,message: "stock item fetched",item: response});
     })

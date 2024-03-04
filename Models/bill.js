@@ -16,7 +16,9 @@ const billSchema = new Schema({
     time: {
         type: Date,
         require: true
-    }
+    },
+    name: String,
+    phone: Number
 });
 
 

@@ -6,6 +6,7 @@ const cors = require('cors');
 const addstocksRouter = require('./Routes/addstocks');
 const viewStockRouter = require('./Routes/viewstocks');
 const billingRouter = require('./Routes/billing');
+const categoryRouter = require('./Routes/categories');
 
 const app = express();
 
@@ -17,6 +18,7 @@ app.use(cors({
 app.use(addstocksRouter);
 app.use(viewStockRouter);
 app.use(billingRouter);
+app.use(categoryRouter);
 
 
 mongoose.connect(process.env.MONGODB_CREDENTIAL)

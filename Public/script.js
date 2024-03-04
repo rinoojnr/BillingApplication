@@ -9,7 +9,45 @@ const searchClear = document.getElementById('close');
 window.addEventListener('DOMContentLoaded',getStocks);
 searchClear.addEventListener('click',getStocks);
 
+function getCategories(){
+    const item_category = document.getElementById('itemCategory');
+    const otherInput = document.getElementById('otherInput');
+    otherInput.style.display = 'none';
+    item_category.innerHTML = "";
+    let  selectOption1 = document.createElement('option');
+         selectOption1.value = "other";
+         selectOption1.disabled = true;
+         selectOption1.selected = true;
+         let text1 = "Category";
+         selectOption1.append(text1);
+        item_category.append(selectOption1);
+    axios.get(`http://localhost:3000/getcategories`)
+    .then((response)=>{
+        for(let i=0;i<response.data.categories.length;i++){
+            let  selectOption = document.createElement('option');
+             selectOption.value = response.data.categories[i].item_category;
+             let text = response.data.categories[i].item_category;
+             selectOption.append(text);
+             item_category.append(selectOption);
+         }
+         let  selectOption = document.createElement('option');
+         selectOption.value = "other";
+         let text = "Other";
+         selectOption.append(text);
+        item_category.append(selectOption);
+
+    }); 
+    item_category.addEventListener('change', function() {
+        if (item_category.value === 'other') {
+          otherInput.style.display = 'block';
+        } else {
+          otherInput.style.display = 'none';
+        }
+      });
+}
+
 function getStocks(){
+    getCategories()
     document.getElementById('close').style.visibility = "hidden";
     document.getElementById('searchInput').value ='';
     let viewstocksInnerHTML = `<tr>
@@ -47,7 +85,7 @@ function getStocks(){
             viewstocksInnerHTML+=`<tr id=${res.data.stocks[i]._id}>`+`<td>`+ (i+1) +`</td>`+
             `<td>`+ res.data.stocks[i].item_name +`</td>`+
             `<td>`+ res.data.stocks[i].item_quantity +`</td>`+
-            `<td>`+ res.data.stocks[i].item_category +`</td>`+
+            `<td>`+ res.data.stocks[i].item_category.item_category +`</td>`+
             `<td>`+ res.data.stocks[i].item_srp +`</td>`+
             `<td>`+ res.data.stocks[i].item_mrp +`</td>`;
 
@@ -76,7 +114,14 @@ function addStock(){
     const item_quantity = document.getElementById('itemQuantity').value;
     const item_mrp = document.getElementById('itemMRP').value;
     const item_srp = document.getElementById('itemSRP').value;
-    const item_category = document.getElementById('itemCategory').value;
+    let item_category = document.getElementById('itemCategory');
+    const otherInput = document.getElementById('otherInput');
+    if (item_category.value === 'other'){
+        item_category = otherInput.value;
+    }else{
+        item_category = document.getElementById('itemCategory').value;
+    }
+    console.log(item_category,"....")
     const item_expiry = document.getElementById('itemExpiry').value;
     axios.post(`http://localhost:3000/addstocksitem`,{item_name,item_quantity,item_mrp,item_srp,item_category,item_expiry})
     .then((res)=>{
@@ -183,7 +228,7 @@ function editStock(id,search){
     const item_quantity = document.getElementById('itemQuantity').value = res.data.item.item_quantity;
     const item_mrp = document.getElementById('itemMRP').value = res.data.item.item_mrp;
     const item_srp = document.getElementById('itemSRP').value = res.data.item.item_srp;
-    const item_category = document.getElementById('itemCategory').value = res.data.item.item_category;
+    const item_category = document.getElementById('itemCategory').value = res.data.item.item_category.item_category;
     const item_expiry = document.getElementById('itemExpiry').value = date;
     
     if(confirm("Are you wanted to edit?")){
@@ -197,7 +242,7 @@ function editStock(id,search){
             const item_quantity = document.getElementById('itemQuantity').value;
             const item_mrp = document.getElementById('itemMRP').value;
             const item_srp = document.getElementById('itemSRP').value;
-            const item_category = document.getElementById('itemCategory').value;
+            const item_category = res.data.item.item_category._id;
             const item_expiry = document.getElementById('itemExpiry').value;
             axios.patch(`http://localhost:3000/editstockitem/${id}`,{ item_name,item_quantity,item_mrp,item_srp,item_category,item_expiry })  
             .then((res)=>{
