@@ -25,14 +25,21 @@
         </div>
         
     </div>
-    <div>
+    <div class="search-and-filter">
         <div id="searchStockForm">
-            <input type="text" id="searchInput" placeholder="Search by Category or Name">
+            <input type="text" id="searchInput" placeholder="Item Name">
             <input type="button" id="search" value="Search">
             <input type="button" id="close" value="Clear">
             <ul id="searchResults"></ul>
         </div>
-    </div>
+        <div>
+            <input type="button" id="closefilter" value="Clear">
+            <select class="item-list" id="filterCategory">
+                <option disabled="true" selected>Category</option>
+            </select>
+        </div>
+    </div>  
+    
     <br>
     <div id="viewstocks">
         <table border="1" id="viewstocks-orderd-list">

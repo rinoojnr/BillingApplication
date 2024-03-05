@@ -43,25 +43,20 @@ exports.deleteStockitem = (req,res) =>{
 //EDIT STOCK ITEM
 exports.editStockitem = async(req,res) =>{
     const { item_name,item_quantity,item_mrp,item_srp,item_category,item_expiry } = req.body;
-    console.log(item_category,"cat")
     const checkItemCategory = await Category.findOne({ item_category });
-    console.log(checkItemCategory,"check")
-    
         Stocks.findById(req.params._id)
-        .then((result)=>{
+        .then(async(result)=>{
             result.updatedAt = new Date();
             result.item_name = item_name;
             result.item_quantity = item_quantity;
             result.item_mrp = item_mrp;
             result.item_srp = item_srp;
             if(checkItemCategory){
-                result.item_category = checkItemCategory.item_category;
-                console.log(checkItemCategory.item_category,"inif")
+                result.item_category = checkItemCategory._id;
             }else{
-                Category.create({ item_category })
+                await Category.create({ item_category })
                 .then((response)=>{
-                    result.item_category = response.item_category;
-                    console.log(response.item_category,"else")
+                    result.item_category = response._id;
                 })
             }
             result.item_expiry = item_expiry;
@@ -77,13 +72,23 @@ exports.searchItems = async (req,res) =>{
     Stocks.find(
         {
             "$or": [
-                {item_category: {$regex: req.params.search,$options: 'i'}},
-                {item_name: {$regex: req.params.search,$options: 'i'}}
-
+                {item_name: {$regex: req.params.search,$options: 'i'}},
             ]
         }
-    )
+    ).populate('item_category')
     .then((result)=>{
         res.status(200).json(result)
+    })
+}
+let response1;
+    
+
+exports.filterItems = async (req,res) =>{
+    Category.findOne({ item_category: req.params.category })
+    .then(async(response)=>{
+         Stocks.find({item_category: response._id}).populate('item_category')
+         .then((result)=>{
+            res.status(200).json(result)
+         })
     })
 }

@@ -88,7 +88,7 @@ table {
 .editbutton:hover {
     background-color: orange;
 }
-#close{
+#close,#closefilter{
     visibility: hidden;
 }
 .item-list {
@@ -101,6 +101,49 @@ table {
     background-color: #f9f9f9;
     color: grey;
 }
+#searchInput{
+    width: 50%;
+    padding: 10px;
+    margin-bottom: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+#search,#close,#closefilter{
+    width:50%;
+    padding: 10px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    background-color: #45a049;
+    color: white;
+    cursor: pointer;
+}
+#close{
+    background-color: #e10c0c;
+    margin-left: 10px;
+}
+#filterCategory{
+    width: 40%;
+    margin-right: 10px;
+}
+#closefilter{
+    width: 40%;
+    background-color: #e10c0c;
+    margin-left: 10px;
+}
+.search-and-filter{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+#searchStockForm{
+    display: flex;
+}
+#searchStockForm input[type="text"] {
+    margin-right: 10px; /* Adjust margin as needed */
+}
 
-
-
+#searchStockForm button {
+    margin-left: 10px; /* Adjust margin as needed */
+}
